@@ -6,7 +6,7 @@ using UnityEngine;
 public class TestObject : ScriptableObject
 {
     public new string name;
-    public string description;
+    public string url;
 
     public GameObject gameObject;
 }

@@ -14,11 +14,12 @@ public class TrackingDefiner : MonoBehaviour, ITrackableEventHandler
     private TrackableBehaviour trackableBehaviour;
 
     private ObjectManager objectManager;
+    private UniWebView webView;
 
+    private string url;
 
     private void Awake()
     {
-        objectManager = ObjectManager.instance.GetComponent<ObjectManager>();
     }
 
     private void Start()
@@ -29,6 +30,8 @@ public class TrackingDefiner : MonoBehaviour, ITrackableEventHandler
         {
             trackableBehaviour.RegisterTrackableEventHandler(this);
         }
+        objectManager = ObjectManager.instance.GetComponent<ObjectManager>();
+        webView = FindObjectOfType<UniWebView>().GetComponent<UniWebView>();
 
     }
 
@@ -55,8 +58,10 @@ public class TrackingDefiner : MonoBehaviour, ITrackableEventHandler
             {
                 //OnMarkerDetected?.Invoke();
                 Instantiate(objectManager.arObjects[i].gameObject, this.transform);
+                url = objectManager.arObjects[i].url;
             }
         }
+        OnRedirect();
     }
 
     private void onTrackingLost()
@@ -73,5 +78,11 @@ public class TrackingDefiner : MonoBehaviour, ITrackableEventHandler
         {
             transform.GetChild(i++).gameObject.SetActive(activeState);
         }
+    }
+
+    private void OnRedirect()
+    {
+        webView.Show(true);
+        webView.Load(url);
     }
 }

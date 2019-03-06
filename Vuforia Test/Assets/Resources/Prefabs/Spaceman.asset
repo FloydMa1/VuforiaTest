@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Spaceman
   m_EditorClassIdentifier: 
   name: Astronaut
-  description: he walks around
+  url: https://www.google.com/search?q=cube&newwindow=1&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiX_tfdp-3gAhUQyaQKHc3LAFYQ_AUIDigB&biw=1536&bih=754&dpr=1.25
   gameObject: {fileID: 2013823190330588870, guid: d92b0d5e068a27041a5e31a4037449a7,
     type: 3}
