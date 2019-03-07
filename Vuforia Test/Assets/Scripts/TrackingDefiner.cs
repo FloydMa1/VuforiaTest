@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Vuforia;
 
 public class TrackingDefiner : MonoBehaviour, ITrackableEventHandler
@@ -10,17 +11,18 @@ public class TrackingDefiner : MonoBehaviour, ITrackableEventHandler
     public delegate void MarkerDetectedEvent();
     public static event MarkerDetectedEvent OnMarkerDetected;
 
+    public delegate void RedirectEvent();
+    public static event RedirectEvent OnRedirect;
+    public static event RedirectEvent OnTracked;
+    public static event RedirectEvent OnLost;
+
     private ImageTargetBehaviour targetBehaviour;
     private TrackableBehaviour trackableBehaviour;
 
     private ObjectManager objectManager;
-    private UniWebView webView;
+    private UIManager uiManager;
 
     private string url;
-
-    private void Awake()
-    {
-    }
 
     private void Start()
     {
@@ -30,9 +32,9 @@ public class TrackingDefiner : MonoBehaviour, ITrackableEventHandler
         {
             trackableBehaviour.RegisterTrackableEventHandler(this);
         }
-        objectManager = ObjectManager.instance.GetComponent<ObjectManager>();
-        webView = FindObjectOfType<UniWebView>().GetComponent<UniWebView>();
 
+        objectManager = ObjectManager.instance;
+        uiManager = UIManager.instance;
     }
 
     public void OnTrackableStateChanged(TrackableBehaviour.Status previousStatus, TrackableBehaviour.Status newStatus)
@@ -42,7 +44,6 @@ public class TrackingDefiner : MonoBehaviour, ITrackableEventHandler
             newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
         {
             OnTrackingFound();
-
         }
         else
         {
@@ -59,9 +60,10 @@ public class TrackingDefiner : MonoBehaviour, ITrackableEventHandler
                 //OnMarkerDetected?.Invoke();
                 Instantiate(objectManager.arObjects[i].gameObject, this.transform);
                 url = objectManager.arObjects[i].url;
+                uiManager.url = url;
             }
         }
-        OnRedirect();
+        OnTracked?.Invoke();
     }
 
     private void onTrackingLost()
@@ -70,6 +72,7 @@ public class TrackingDefiner : MonoBehaviour, ITrackableEventHandler
         {
             SetChildrenActive(false);
         }
+        OnLost?.Invoke();
     }
 
     private void SetChildrenActive(bool activeState)
@@ -78,11 +81,5 @@ public class TrackingDefiner : MonoBehaviour, ITrackableEventHandler
         {
             transform.GetChild(i++).gameObject.SetActive(activeState);
         }
-    }
-
-    private void OnRedirect()
-    {
-        webView.Show(true);
-        webView.Load(url);
     }
 }

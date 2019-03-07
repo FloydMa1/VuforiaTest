@@ -6,8 +6,6 @@ using UnityEditor;
 public class ObjectManager : MonoBehaviour
 {
     public static ObjectManager instance;
-
-    //public Dictionary<string, GameObject> sObjects = new Dictionary<string, GameObject>();
     
     public TestObject[] arObjects;
 
@@ -22,8 +20,7 @@ public class ObjectManager : MonoBehaviour
 
         TrackingDefiner.OnMarkerDetected += OnMarkerDetected;
 
-        arObjects = Resources.LoadAll<TestObject>("Prefabs/");
-        
+        arObjects = Resources.LoadAll<TestObject>("Prefabs/ScriptableObjects/");
     }
 
     private void OnDestroy()
